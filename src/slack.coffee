@@ -130,6 +130,8 @@ class Slack extends Adapter
 
   getAuthorFromRequest: (req) ->
     # Return an author object
+    console.log 'request params', req.param
+
     id       : req.param 'user_id'
     name     : req.param 'user_name'
 
