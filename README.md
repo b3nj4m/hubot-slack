@@ -1,31 +1,27 @@
-# hubot-slack
+# brobbot-slack
 
-This is a [Hubot](http://hubot.github.com/) adapter to use with [Slack](https://slack.com).  
-[![Build Status](https://travis-ci.org/tinyspeck/hubot-slack.png)](https://travis-ci.org/tinyspeck/hubot-slack)
+This is a [Brobbot](http://b3nj4m.github.io/hubot) adapter to use with [Slack](https://slack.com).  
 
 ## Getting Started
 
-#### Creating a new bot
+#### Adding Slack adapter
 
-- `npm install -g hubot coffee-script`
-- `hubot --create [path_name]`
-- `cd [path_name]`
-- `npm install hubot-slack --save`
+- `npm install brobbot-slack --save`
 - Initialize git and make your initial commit
-- Check out the [hubot docs](https://github.com/github/hubot/tree/master/docs) for further guidance on how to build your bot
+- Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/README.md) for further guidance on how to build your bot
 
 #### Testing your bot locally
 
-- `./bin/hubot`
+- `./bin/brobbot`
 
 #### Deploying to Heroku
 
-This is a modified set of instructions based on the [instructions on the Hubot wiki](https://github.com/github/hubot/blob/master/docs/deploying/heroku.md).
+This is a modified set of instructions based on the [instructions on the Brobbot wiki](https://github.com/b3nj4m/hubot/blob/master/docs/deploying/heroku.md).
 
-- Make sure `hubot-slack` is in your `package.json` dependencies
+- Make sure `brobbot-slack` is in your `package.json` dependencies
 - Edit your `Procfile` and change it to use the `slack` adapter:
 
-        web: bin/hubot --adapter slack
+        web: bin/brobbot --adapter slack
 
 - Install [heroku toolbelt](https://toolbelt.heroku.com/) if you haven't already.
 - `heroku create my-company-slackbot`
@@ -34,9 +30,9 @@ This is a modified set of instructions based on the [instructions on the Hubot w
 - Add the [config variables](#adapter-configuration). For example:
 
         % heroku config:add HEROKU_URL=http://soothing-mists-4567.herokuapp.com
-        % heroku config:add HUBOT_SLACK_TOKEN=dqqQP9xlWXAq5ybyqKAU0axG
-        % heroku config:add HUBOT_SLACK_TEAM=myteam
-        % heroku config:add HUBOT_SLACK_BOTNAME=slack-hubot
+        % heroku config:add BROBBOT_SLACK_TOKEN=dqqQP9xlWXAq5ybyqKAU0axG
+        % heroku config:add BROBBOT_SLACK_TEAM=myteam
+        % heroku config:add BROBBOT_SLACK_BOTNAME=slack-brobbot
 
 - Deploy and start the bot:
 
@@ -49,29 +45,29 @@ This is a modified set of instructions based on the [instructions on the Hubot w
 
 This adapter uses the following environment variables:
 
-#### HUBOT\_SLACK\_TOKEN
+#### BROBBOT\_SLACK\_TOKEN
 
-This is the service token you are given when you add Hubot to your Team Services.
+This is the service token you are given when you add Brobbot to your Team Services.
 
-#### HUBOT\_SLACK\_TEAM
+#### BROBBOT\_SLACK\_TEAM
 
 This is your team's Slack subdomain. For example, if your team is `https://myteam.slack.com/`, you would enter `myteam` here.
 
-#### HUBOT\_SLACK\_BOTNAME
+#### BROBBOT\_SLACK\_BOTNAME
 
-Optional. What your Hubot is called on Slack. If you entered `slack-hubot` here, you would address your bot like `slack-hubot: help`. Otherwise, defaults to `slackbot`.
+Optional. What your Brobbot is called on Slack. If you entered `slack-brobbot` here, you would address your bot like `slack-brobbot: help`. Otherwise, defaults to `slackbot`.
 
-#### HUBOT\_SLACK\_CHANNELMODE
+#### BROBBOT\_SLACK\_CHANNELMODE
 
-Optional. If you entered `blacklist`, Hubot will not post in the rooms specified by HUBOT_SLACK_CHANNELS, or alternately *only* in those rooms if `whitelist` is specified instead. Defaults to `blacklist`.
+Optional. If you entered `blacklist`, Brobbot will not post in the rooms specified by BROBBOT_SLACK_CHANNELS, or alternately *only* in those rooms if `whitelist` is specified instead. Defaults to `blacklist`.
 
-#### HUBOT\_SLACK\_CHANNELS
+#### BROBBOT\_SLACK\_CHANNELS
 
-Optional. A comma-separated list of channels to either be blacklisted or whitelisted, depending on the value of HUBOT_SLACK_CHANNELMODE.
+Optional. A comma-separated list of channels to either be blacklisted or whitelisted, depending on the value of BROBBOT_SLACK_CHANNELMODE.
 
-#### HUBOT\_SLACK\_LINK\_NAMES
+#### BROBBOT\_SLACK\_LINK\_NAMES
 
-Optional. By default, Slack will not linkify channel names (starting with a '#') and usernames (starting with an '@'). You can enable this behavior by setting HUBOT_SLACK_LINK_NAMES to 1. Otherwise, defaults to 0. See [Slack API : Message Formatting Docs](https://api.slack.com/docs/formatting) for more information.
+Optional. By default, Slack will not linkify channel names (starting with a '#') and usernames (starting with an '@'). You can enable this behavior by setting BROBBOT_SLACK_LINK_NAMES to 1. Otherwise, defaults to 0. See [Slack API : Message Formatting Docs](https://api.slack.com/docs/formatting) for more information.
 
 ## Under the Hood
 
@@ -81,8 +77,6 @@ The slack adapter adds a path to the robot's router that will accept POST reques
 
 `/hubot/slack-webhook`
 
-Source: [https://github.com/tinyspeck/hubot-slack/blob/2.2.0/src/slack.coffee#L161-L177](https://github.com/tinyspeck/hubot-slack/blob/2.2.0/src/slack.coffee#L161-L177)
-
 Expected parameters:
 
 - text
@@ -91,7 +85,7 @@ Expected parameters:
 - channel_id
 - channel_name
 
-If there is a message and it can deduce an author from those paramters, it'll create a new [TextMessage](https://github.com/github/hubot/blob/v2.7.2/src/message.coffee#L14) object and have the robot receive it, from there proceeding down the regular hubot path.
+If there is a message and it can deduce an author from those paramters, it'll create a new [TextMessage](https://github.com/b3nj4m/hubot-slack/blob/master/src/slack.coffee#L171-L173) object and have the robot receive it, from there proceeding down the regular brobbot path.
 
 #### Sending Messages
 
@@ -108,7 +102,7 @@ with a JSON-formatted body including the following dictionary:
 
 #### Message to a specific room:
 
-Sometime, it's useful to send a message regardless of the channel's activity (like `robot.hear` or `robot.response`). Hubot has [`robot.messageRoom`](https://github.com/github/hubot/blob/v2.8.0/src/robot.coffee#L401-L409) available for this use case.
+Sometime, it's useful to send a message regardless of the channel's activity (like `robot.hear` or `robot.response`). Brobbot has `robot.messageRoom` available for this use case.
 
 Slack API uses channel ID's by default, which uses computer-friendly alphanumeric ID. To use the pretty names, prefix it with a hash.
 
