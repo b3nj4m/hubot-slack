@@ -1,4 +1,4 @@
-{Robot, Adapter, TextMessage} = require 'hubot'
+{Robot, Adapter, TextMessage} = require 'brobbot'
 https = require 'https'
 
 class Slack extends Adapter
@@ -107,14 +107,14 @@ class Slack extends Adapter
 
   parseOptions: ->
     @options =
-      token : process.env.HUBOT_SLACK_TOKEN
-      team  : process.env.HUBOT_SLACK_TEAM
-      name  : process.env.HUBOT_SLACK_BOTNAME or 'slackbot'
-      mode  : process.env.HUBOT_SLACK_CHANNELMODE or 'blacklist'
+      token : process.env.BROBBOT_SLACK_TOKEN
+      team  : process.env.BROBBOT_SLACK_TEAM
+      name  : process.env.BROBBOT_SLACK_BOTNAME or 'slackbot'
+      mode  : process.env.BROBBOT_SLACK_CHANNELMODE or 'blacklist'
       # Make sure channel settings don't include leading hashes
-      channels: (process.env.HUBOT_SLACK_CHANNELS?.split(',') or []).map (channel) ->
+      channels: (process.env.BROBBOT_SLACK_CHANNELS?.split(',') or []).map (channel) ->
         channel.replace /^#/, ''
-      link_names: process.env.HUBOT_SLACK_LINK_NAMES or 0
+      link_names: process.env.BROBBOT_SLACK_LINK_NAMES or 0
 
   getMessageFromRequest: (req) ->
     # Check the token
@@ -157,8 +157,8 @@ class Slack extends Adapter
 
     @log "Slack adapter options:", @options
 
-    return @logError "No services token provided to Hubot" unless @options.token
-    return @logError "No team provided to Hubot" unless @options.team
+    return @logError "No services token provided to Brobbot" unless @options.token
+    return @logError "No team provided to Brobbot" unless @options.team
 
     @robot.on 'slack-attachment', (payload)=>
       @custom(payload.message, payload.content)
@@ -182,10 +182,10 @@ class Slack extends Adapter
       # if any, will be async above
       res.end ""
 
-    # Provide our name to Hubot
+    # Provide our name to Brobbot
     self.robot.name = @options.name
 
-    # Tell Hubot we're connected so it can load scripts
+    # Tell Brobbot we're connected so it can load scripts
     @log "Successfully 'connected' as", self.robot.name
     self.emit "connected"
 
