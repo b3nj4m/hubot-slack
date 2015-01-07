@@ -1,10 +1,7 @@
 {
-  "name": "hubot-slack",
-  "version": "2.2.3",
-  "author": {
-    "name": "Tiny Speck",
-    "url": "https://www.tinyspeck.com/"
-  },
+  "name": "brobbot-slack",
+  "version": "3.0.0",
+  "author": "Ben Robbins <ben.robbins@gmail.com>",
   "contributors": [
     {
       "name": "Myles Grant",
@@ -29,12 +26,11 @@
     }
   ],
   "keywords": [
-    "hubot",
-    "tinyspeck",
+    "brobbot",
     "adapter",
     "slack"
   ],
-  "description": "A Slack adapter for hubot",
+  "description": "A Slack adapter for brobbot",
   "licenses": [
     {
       "type": "MIT",
@@ -43,11 +39,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/tinyspeck/hubot-slack.git"
+    "url": "http://github.com/b3nj4m/hubot-slack.git"
   },
   "bugs": {
-    "url": "https://github.com/tinyspeck/hubot-slack/issues",
-    "email": "help@tinyspeck.com"
+    "url": "https://github.com/b3nj4m/hubot-slack/issues"
+  },
+  "peerDependencies": {
+    "brobbot": "3.x"
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
@@ -55,13 +53,13 @@
     "grunt-release": "~0.6.0",
     "should": "~2.0.2",
     "mocha": "~1.13.0",
-    "hubot": "~2.6.4",
+    "brobbot": "~3.5.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-shell": "~0.5.0"
   },
   "main": "./src/slack",
   "engines": {
-    "node": ">=0.4.7"
+    "node": ">=0.10.0"
   },
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register --reporter spec"

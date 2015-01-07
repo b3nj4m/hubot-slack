@@ -120,63 +120,63 @@ describe 'Parsing options', ->
     should.not.exist slack.options.token
     should.not.exist slack.options.team
 
-  it 'Should use HUBOT_SLACK_TOKEN environment variable', ->
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+  it 'Should use BROBBOT_SLACK_TOKEN environment variable', ->
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     slack.options.token.should.eql 'insecure token'
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_TOKEN
 
-  it 'Should use HUBOT_SLACK_TEAM environment variable', ->
-    process.env.HUBOT_SLACK_TEAM = 'fake team'
+  it 'Should use BROBBOT_SLACK_TEAM environment variable', ->
+    process.env.BROBBOT_SLACK_TEAM = 'fake team'
     slack.parseOptions()
 
     slack.options.team.should.eql 'fake team'
-    delete process.env.HUBOT_SLACK_TEAM
+    delete process.env.BROBBOT_SLACK_TEAM
 
-  it 'Should use HUBOT_SLACK_BOTNAME environment variable', ->
-    process.env.HUBOT_SLACK_BOTNAME = 'Lonely Bot'
+  it 'Should use BROBBOT_SLACK_BOTNAME environment variable', ->
+    process.env.BROBBOT_SLACK_BOTNAME = 'Lonely Bot'
     slack.parseOptions()
 
     slack.options.name.should.eql 'Lonely Bot'
-    delete process.env.HUBOT_SLACK_BOTNAME
+    delete process.env.BROBBOT_SLACK_BOTNAME
 
-  it 'Should use HUBOT_SLACK_CHANNELMODE environment variable', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'a channel mode'
+  it 'Should use BROBBOT_SLACK_CHANNELMODE environment variable', ->
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'a channel mode'
     slack.parseOptions()
 
     slack.options.mode.should.eql 'a channel mode'
-    delete process.env.HUBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
 
-  it 'Should use HUBOT_SLACK_CHANNELS environment variable', ->
-    process.env.HUBOT_SLACK_CHANNELS = 'a,list,of,channels'
+  it 'Should use BROBBOT_SLACK_CHANNELS environment variable', ->
+    process.env.BROBBOT_SLACK_CHANNELS = 'a,list,of,channels'
     slack.parseOptions()
 
     slack.options.channels.should.eql ['a', 'list', 'of', 'channels']
-    delete process.env.HUBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_CHANNELS
 
 describe 'Parsing the request', ->
   it 'Should get the message', ->
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
     req = stubs.request()
     req.data.text = requestText
-    req.data.token = process.env.HUBOT_SLACK_TOKEN
+    req.data.token = process.env.BROBBOT_SLACK_TOKEN
 
     slack.getMessageFromRequest(req).should.eql requestText
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should return null if the message is missing', ->
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     req = stubs.request()
-    req.data.token = process.env.HUBOT_SLACK_TOKEN
+    req.data.token = process.env.BROBBOT_SLACK_TOKEN
     message = slack.getMessageFromRequest req
     should.not.exist message
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should get the author', ->
     req = stubs.request()
@@ -192,83 +192,83 @@ describe 'Parsing the request', ->
       name: 'Luke'
 
   it 'Should ignore blacklisted rooms', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'blacklist'
-    process.env.HUBOT_SLACK_CHANNELS = 'test'
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'blacklist'
+    process.env.BROBBOT_SLACK_CHANNELS = 'test'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
     req = stubs.request()
     req.data =
       channel_name: 'test'
-      token: process.env.HUBOT_SLACK_TOKEN
+      token: process.env.BROBBOT_SLACK_TOKEN
       text: requestText
 
     message = slack.getMessageFromRequest req
     should.not.exist message
-    delete process.env.HUBOT_SLACK_CHANNELMODE
-    delete process.env.HUBOT_SLACK_CHANNELS
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should strip leading hashes from blacklisted room names', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'blacklist'
-    process.env.HUBOT_SLACK_CHANNELS = '#foo,#test'
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'blacklist'
+    process.env.BROBBOT_SLACK_CHANNELS = '#foo,#test'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
     req = stubs.request()
     req.data =
       channel_name: 'test'
-      token: process.env.HUBOT_SLACK_TOKEN
+      token: process.env.BROBBOT_SLACK_TOKEN
       text: requestText
 
     message = slack.getMessageFromRequest req
     should.not.exist message
-    delete process.env.HUBOT_SLACK_CHANNELMODE
-    delete process.env.HUBOT_SLACK_CHANNELS
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should not ignore not blacklisted rooms', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'blacklist'
-    process.env.HUBOT_SLACK_CHANNELS = 'test'
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'blacklist'
+    process.env.BROBBOT_SLACK_CHANNELS = 'test'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
     req = stubs.request()
     req.data =
       channel_name: 'not-test'
-      token: process.env.HUBOT_SLACK_TOKEN
+      token: process.env.BROBBOT_SLACK_TOKEN
       text: requestText
 
     slack.getMessageFromRequest(req).should.eql requestText
-    delete process.env.HUBOT_SLACK_CHANNELMODE
-    delete process.env.HUBOT_SLACK_CHANNELS
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should not ignore whitelisted rooms', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'whitelist'
-    process.env.HUBOT_SLACK_CHANNELS = 'test'
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'whitelist'
+    process.env.BROBBOT_SLACK_CHANNELS = 'test'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
     req = stubs.request()
     req.data =
       channel_name: 'test'
-      token: process.env.HUBOT_SLACK_TOKEN
+      token: process.env.BROBBOT_SLACK_TOKEN
       text: requestText
 
     slack.getMessageFromRequest(req).should.eql requestText
-    delete process.env.HUBOT_SLACK_CHANNELMODE
-    delete process.env.HUBOT_SLACK_CHANNELS
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should ignore not whitelisted rooms', ->
-    process.env.HUBOT_SLACK_CHANNELMODE = 'whitelist'
-    process.env.HUBOT_SLACK_CHANNELS = 'test'
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_CHANNELMODE = 'whitelist'
+    process.env.BROBBOT_SLACK_CHANNELS = 'test'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
@@ -280,12 +280,12 @@ describe 'Parsing the request', ->
 
     message = slack.getMessageFromRequest req
     should.not.exist message
-    delete process.env.HUBOT_SLACK_CHANNELMODE
-    delete process.env.HUBOT_SLACK_CHANNELS
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_CHANNELMODE
+    delete process.env.BROBBOT_SLACK_CHANNELS
+    delete process.env.BROBBOT_SLACK_TOKEN
 
   it 'Should fail if the token is incorrect', ->
-    process.env.HUBOT_SLACK_TOKEN = 'insecure token'
+    process.env.BROBBOT_SLACK_TOKEN = 'insecure token'
     slack.parseOptions()
 
     requestText = 'The message from the request'
@@ -295,4 +295,4 @@ describe 'Parsing the request', ->
 
     message = slack.getMessageFromRequest req
     should.not.exist message
-    delete process.env.HUBOT_SLACK_TOKEN
+    delete process.env.BROBBOT_SLACK_TOKEN

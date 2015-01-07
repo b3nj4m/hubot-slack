@@ -121,12 +121,12 @@ class Slack extends Adapter
     return if not req.param('token') or (req.param('token') isnt @options.token)
 
     # Parse the payload
-    hubotMsg = req.param 'text'
+    brobbotMsg = req.param 'text'
     room = req.param 'channel_name'
     mode = @options.mode
     channels = @options.channels
 
-    @unescapeHtml hubotMsg if hubotMsg and (mode is 'blacklist' and room not in channels or mode is 'whitelist' and room in channels)
+    @unescapeHtml brobbotMsg if brobbotMsg and (mode is 'blacklist' and room not in channels or mode is 'whitelist' and room in channels)
 
   getAuthorFromRequest: (req) ->
     # Return an author object
@@ -136,13 +136,7 @@ class Slack extends Adapter
     name     : req.param 'user_name'
 
   userFromParams: (params) ->
-    # hubot < 2.4.2: params = user
-    # hubot >= 2.4.2: params = {user: user, ...}
-    user = {}
-    if params.user
-      user = params.user
-    else
-      user = params
+    user = params.user
 
     if user.room and not user.reply_to
       user.reply_to = user.room
@@ -167,16 +161,16 @@ class Slack extends Adapter
     self.robot.router.post "/hubot/slack-webhook", (req, res) ->
       self.log "Incoming message received"
 
-      hubotMsg = self.getMessageFromRequest req
+      brobbotMsg = self.getMessageFromRequest req
       author = self.getAuthorFromRequest req
       author = self.robot.brain.userForId author.id, author
       author.reply_to = req.param 'channel_id'
       author.room = req.param 'channel_name'
       self.channelMapping[req.param 'channel_name'] = req.param 'channel_id'
 
-      if hubotMsg and author
+      if brobbotMsg and author
         # Pass to the robot
-        self.receive new TextMessage(author, hubotMsg)
+        self.receive new TextMessage(author, brobbotMsg)
 
       # Just send back an empty reply, since our actual reply,
       # if any, will be async above
