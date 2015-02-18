@@ -1,6 +1,6 @@
 {
   "name": "brobbot-slack",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "Ben Robbins <ben.robbins@gmail.com>",
   "contributors": [
     {
@@ -45,7 +45,7 @@
     "url": "https://github.com/b3nj4m/hubot-slack/issues"
   },
   "peerDependencies": {
-    "brobbot": "3.x"
+    "brobbot": "3.x-4.x"
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
