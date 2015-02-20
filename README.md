@@ -1,18 +1,17 @@
 # brobbot-slack
 
-This is a [Brobbot](http://b3nj4m.github.io/hubot) adapter to use with [Slack](https://slack.com).  
+This is a [Brobbot](https://npmjs.org/package/brobbot) adapter to use with [Slack](https://slack.com).  
 
 ## Getting Started
 
 #### Adding Slack adapter
 
 - `npm install brobbot-slack --save`
-- Initialize git and make your initial commit
-- Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/README.md) for further guidance on how to build your bot
+- Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/README.md) for further guidance on how to build your bot
 
-#### Testing your bot locally
+#### Testing your bot instance locally
 
-- `./bin/brobbot`
+- `./index.sh -a slack`
 
 #### Deploying to Heroku
 
@@ -21,7 +20,7 @@ This is a modified set of instructions based on the [instructions on the Brobbot
 - Make sure `brobbot-slack` is in your `package.json` dependencies
 - Edit your `Procfile` and change it to use the `slack` adapter:
 
-        web: bin/brobbot --adapter slack
+        web: ./index.sh --adapter slack
 
 - Install [heroku toolbelt](https://toolbelt.heroku.com/) if you haven't already.
 - `heroku create my-company-slackbot`
@@ -85,7 +84,7 @@ Expected parameters:
 - channel_id
 - channel_name
 
-If there is a message and it can deduce an author from those paramters, it'll create a new [TextMessage](https://github.com/b3nj4m/hubot-slack/blob/master/src/slack.coffee#L171-L173) object and have the robot receive it, from there proceeding down the regular brobbot path.
+If there is a message and it can deduce an author from those paramters, it'll create a new `TextMessage` object and have the robot receive it, from there proceeding down the regular brobbot path.
 
 #### Sending Messages
 
