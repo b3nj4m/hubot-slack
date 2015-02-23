@@ -6,12 +6,17 @@ This is a [Brobbot](https://npmjs.org/package/brobbot) adapter to use with [Slac
 
 #### Adding Slack adapter
 
-- `npm install brobbot-slack --save`
-- Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/README.md) for further guidance on how to build your bot
+In your [brobbot-instance](https://github.com/b3nj4m/brobbot-instance):
+
+```bash
+npm install brobbot-slack --save
+```
+
+Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/README.md) for further guidance on how to build your bot
 
 #### Testing your bot instance locally
 
-- `./index.sh -a slack`
+- `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`
 
 #### Deploying to Heroku
 
@@ -20,7 +25,7 @@ This is a modified set of instructions based on the [instructions on the Brobbot
 - Make sure `brobbot-slack` is in your `package.json` dependencies
 - Edit your `Procfile` and change it to use the `slack` adapter:
 
-        web: ./index.sh --adapter slack
+        web: ./index.sh -a slack
 
 - Install [heroku toolbelt](https://toolbelt.heroku.com/) if you haven't already.
 - `heroku create my-company-slackbot`
@@ -30,8 +35,6 @@ This is a modified set of instructions based on the [instructions on the Brobbot
 
         % heroku config:add HEROKU_URL=http://soothing-mists-4567.herokuapp.com
         % heroku config:add BROBBOT_SLACK_TOKEN=dqqQP9xlWXAq5ybyqKAU0axG
-        % heroku config:add BROBBOT_SLACK_TEAM=myteam
-        % heroku config:add BROBBOT_SLACK_BOTNAME=slack-brobbot
 
 - Deploy and start the bot:
 
@@ -40,72 +43,32 @@ This is a modified set of instructions based on the [instructions on the Brobbot
 
 - Profit!
 
-## Adapter configuration
+## Upgrading from earlier versions of Hubot
+
+Version 3 of the brobbot-slack adapter requires different server support to
+previous versions. If you have an existing "hubot" integration set up you'll
+need to upgrade:
+
+- Go to https://my.slack.com/services/new/hubot and create a new hubot
+  integration
+- Run `npm install brobbot-slack --save`
+  to update your code.
+- Test your bot instance locally using:
+  `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`
+- Update your production startup scripts to pass the new `BROBBOT_SLACK_TOKEN`.
+  You can remove the other `BROBBOT_SLACK_*` environment variables if you want.
+- Deploy your new brobbot to production.
+- Once you're happy it works, remove the old hubot integration from
+  https://my.slack.com/services
+
+## Configuration
 
 This adapter uses the following environment variables:
 
-#### BROBBOT\_SLACK\_TOKEN
+ - `BROBBOT_SLACK_TOKEN` - this is the API token for the Slack user you would like to run Hubot under.
 
-This is the service token you are given when you add Brobbot to your Team Services.
+To add or remove your bot from specific channels or private groups, you can use the /kick and /invite slash commands that are built into Slack.
 
-#### BROBBOT\_SLACK\_TEAM
+## Copyright
 
-This is your team's Slack subdomain. For example, if your team is `https://myteam.slack.com/`, you would enter `myteam` here.
-
-#### BROBBOT\_SLACK\_BOTNAME
-
-Optional. What your Brobbot is called on Slack. If you entered `slack-brobbot` here, you would address your bot like `slack-brobbot: help`. Otherwise, defaults to `slackbot`.
-
-#### BROBBOT\_SLACK\_CHANNELMODE
-
-Optional. If you entered `blacklist`, Brobbot will not post in the rooms specified by BROBBOT_SLACK_CHANNELS, or alternately *only* in those rooms if `whitelist` is specified instead. Defaults to `blacklist`.
-
-#### BROBBOT\_SLACK\_CHANNELS
-
-Optional. A comma-separated list of channels to either be blacklisted or whitelisted, depending on the value of BROBBOT_SLACK_CHANNELMODE.
-
-#### BROBBOT\_SLACK\_LINK\_NAMES
-
-Optional. By default, Slack will not linkify channel names (starting with a '#') and usernames (starting with an '@'). You can enable this behavior by setting BROBBOT_SLACK_LINK_NAMES to 1. Otherwise, defaults to 0. See [Slack API : Message Formatting Docs](https://api.slack.com/docs/formatting) for more information.
-
-## Under the Hood
-
-#### Receiving Messages:
-
-The slack adapter adds a path to the robot's router that will accept POST requests to:
-
-`/hubot/slack-webhook`
-
-Expected parameters:
-
-- text
-- user_id
-- user_name
-- channel_id
-- channel_name
-
-If there is a message and it can deduce an author from those paramters, it'll create a new `TextMessage` object and have the robot receive it, from there proceeding down the regular brobbot path.
-
-#### Sending Messages
-
-When a script calls `send()` or `reply()` this adapter makes a POST request to your team's specific URL webhook:
-
-`https://<your_team_name>.slack.com/services/hooks/hubot`
-
-with a JSON-formatted body including the following dictionary:
-
-- username
-- channel
-- text
-- link_names (optionally)
-
-#### Message to a specific room:
-
-Sometime, it's useful to send a message regardless of the channel's activity (like `robot.hear` or `robot.response`). Brobbot has `robot.messageRoom` available for this use case.
-
-Slack API uses channel ID's by default, which uses computer-friendly alphanumeric ID. To use the pretty names, prefix it with a hash.
-
-```coffeescript
-robot.respond /hello$/i, (msg) ->
-  robot.messageRoom '#general', 'hello there'
-```
+Copyright &copy; Slack Technologies, Inc. MIT License; see LICENSE for further details.
