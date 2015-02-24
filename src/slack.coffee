@@ -58,7 +58,7 @@ class SlackBot extends Adapter
       @userChange user
 
   userChange: (user) =>
-    newUser = {name: user.name, real_name: user.real_name, email_address: user.profile.email}
+    newUser = {id: user.id, name: user.name, real_name: user.real_name, email_address: user.profile.email}
 
     @robot.brain.addUser(newUser).then =>
       @robot.brain.userForId user.id
