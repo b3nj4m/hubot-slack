@@ -4,6 +4,7 @@
 
 SlackClient = require 'slack-client'
 Util = require 'util'
+Q = require 'q'
 
 class SlackBot extends Adapter
   @MAX_MESSAGE_LENGTH: 4000
@@ -21,10 +22,6 @@ class SlackBot extends Adapter
 
     return @robot.logger.error "No services token provided to Brobbot" unless options.token
     return @robot.logger.error "v2 services token provided, please follow the upgrade instructions" unless (options.token.substring(0, 5) == 'xoxb-')
-
-    # Tell Brobbot we're connected so it can load scripts
-    @log "Successfully 'connected' as", self.robot.name
-    self.emit "connected"
 
     @options = options
 
@@ -62,12 +59,9 @@ class SlackBot extends Adapter
 
   userChange: (user) =>
     newUser = {name: user.name, real_name: user.real_name, email_address: user.profile.email}
-    if user.id of @robot.brain.data.users
-      for key, value of @robot.brain.data.users[user.id]
-        unless key of newUser
-          newUser[key] = value
-    delete @robot.brain.data.users[user.id]
-    @robot.brain.userForId user.id, newUser
+
+    @robot.brain.addUser(newUser).then =>
+      @robot.brain.userForId user.id
 
   open: =>
     @robot.logger.info 'Slack client now connected'
@@ -94,54 +88,57 @@ class SlackBot extends Adapter
       # use a raw message, so scripts that care can still see these things
 
       if msg.user
-        user = @robot.brain.userForId msg.user
+        getUser = @robot.brain.userForId msg.user
       else
         # We need to fake a user because, at the very least, CatchAllMessage
         # expects it to be there.
         user = {}
         user.name = msg.username if msg.username?
-      user.room = channel.name if channel
+        getUser = Q user
 
-      rawText = msg.getBody()
-      text = @removeFormatting rawText
+      getUser.then (user) =>
+        user.room = channel.name if channel
 
-      if msg.subtype is 'bot_message'
-        @robot.logger.debug "Received bot message: '#{text}' in channel: #{channel?.name}, from: #{user?.name}"
-        @receive new SlackBotMessage user, text, rawText, msg
-      else
-        @robot.logger.debug "Received raw message (subtype: #{msg.subtype})"
-        @receive new SlackRawMessage user, text, rawText, msg
-      return
+        rawText = msg.getBody()
+        text = @removeFormatting rawText
 
-    # Process the user into a full brobbot user
-    user = @robot.brain.userForId msg.user
-    user.room = channel.name
-
-    # Test for enter/leave messages
-    if msg.subtype is 'channel_join' or msg.subtype is 'group_join'
-      @robot.logger.debug "#{user.name} has joined #{channel.name}"
-      @receive new EnterMessage user
-
-    else if msg.subtype is 'channel_leave' or msg.subtype is 'group_leave'
-      @robot.logger.debug "#{user.name} has left #{channel.name}"
-      @receive new LeaveMessage user
-
-    else if msg.subtype is 'channel_topic' or msg.subtype is 'group_topic'
-      @robot.logger.debug "#{user.name} set the topic in #{channel.name} to #{msg.topic}"
-      @receive new TopicMessage user, msg.topic, msg.ts
+        if msg.subtype is 'bot_message'
+          @robot.logger.debug "Received bot message: '#{text}' in channel: #{channel?.name}, from: #{user?.name}"
+          @receive new SlackBotMessage user, text, rawText, msg
+        else
+          @robot.logger.debug "Received raw message (subtype: #{msg.subtype})"
+          @receive new SlackRawMessage user, text, rawText, msg
 
     else
-      # Build message text to respond to, including all attachments
-      rawText = msg.getBody()
-      text = @removeFormatting rawText
+      # Process the user into a full brobbot user
+      @robot.brain.userForId(msg.user).then (user) =>
+        user.room = channel.name
 
-      @robot.logger.debug "Received message: '#{text}' in channel: #{channel.name}, from: #{user.name}"
+        # Test for enter/leave messages
+        if msg.subtype is 'channel_join' or msg.subtype is 'group_join'
+          @robot.logger.debug "#{user.name} has joined #{channel.name}"
+          @receive new EnterMessage user
 
-      # If this is a DM, pretend it was addressed to us
-      if msg.getChannelType() == 'DM'
-        text = "#{@robot.name} #{text}"
+        else if msg.subtype is 'channel_leave' or msg.subtype is 'group_leave'
+          @robot.logger.debug "#{user.name} has left #{channel.name}"
+          @receive new LeaveMessage user
 
-      @receive new SlackTextMessage user, text, rawText, msg
+        else if msg.subtype is 'channel_topic' or msg.subtype is 'group_topic'
+          @robot.logger.debug "#{user.name} set the topic in #{channel.name} to #{msg.topic}"
+          @receive new TopicMessage user, msg.topic, msg.ts
+
+        else
+          # Build message text to respond to, including all attachments
+          rawText = msg.getBody()
+          text = @removeFormatting rawText
+
+          @robot.logger.debug "Received message: '#{text}' in channel: #{channel.name}, from: #{user.name}"
+
+          # If this is a DM, pretend it was addressed to us
+          if msg.getChannelType() == 'DM'
+            text = "#{@robot.name} #{text}"
+
+          @receive new SlackTextMessage user, text, rawText, msg
 
   removeFormatting: (text) ->
     # https://api.slack.com/docs/formatting
