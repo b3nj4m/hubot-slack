@@ -20,18 +20,19 @@ Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/RE
 
 #### Deploying to Heroku
 
+You can use the Heroku deploy button on the [brobbot-slack-instance](https://github.com/b3nj4m/brobbot-slack-instance) project, or you can do it manually:
+
 This is a modified set of instructions based on the [instructions on the Brobbot wiki](https://github.com/b3nj4m/hubot/blob/master/docs/deploying/heroku.md).
 
-- Make sure `brobbot-slack` is in your `package.json` dependencies
+- Make sure `brobbot-slack` is in your `package.json` dependencies in your [brobbot-instance](https://github.com/b3nj4m/brobbot-instance).
 - Edit your `Procfile` and change it to use the `slack` adapter:
 
         web: ./index.sh -a slack
 
 - Install [heroku toolbelt](https://toolbelt.heroku.com/) if you haven't already.
 - `heroku create my-company-slackbot`
-- `heroku addons:add redistogo:nano`
 - Activate the Hubot service on your ["Team Services"](http://my.slack.com/services/new/hubot) page inside Slack.
-- Add the [config variables](#adapter-configuration). For example:
+- Add the [config variables](#configuration). For example:
 
         % heroku config:add HEROKU_URL=http://soothing-mists-4567.herokuapp.com
         % heroku config:add BROBBOT_SLACK_TOKEN=dqqQP9xlWXAq5ybyqKAU0axG
@@ -45,13 +46,13 @@ This is a modified set of instructions based on the [instructions on the Brobbot
 
 ## Upgrading from earlier versions of Hubot
 
-Version 3 of the brobbot-slack adapter requires different server support to
+Version 4 of the brobbot-slack adapter requires different server support to
 previous versions. If you have an existing "hubot" integration set up you'll
 need to upgrade:
 
 - Go to https://my.slack.com/services/new/hubot and create a new hubot
   integration
-- Run `npm install brobbot-slack --save`
+- Run `npm install brobbot-slack@latest --save`
   to update your code.
 - Test your bot instance locally using:
   `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`
@@ -65,7 +66,7 @@ need to upgrade:
 
 This adapter uses the following environment variables:
 
- - `BROBBOT_SLACK_TOKEN` - this is the API token for the Slack user you would like to run Hubot under.
+ - `BROBBOT_SLACK_TOKEN` - This is the API token for the Slack user you would like to run Hubot under.
 
 To add or remove your bot from specific channels or private groups, you can use the /kick and /invite slash commands that are built into Slack.
 
