@@ -18,9 +18,11 @@ Check out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/RE
 
 - `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`
 
-#### Deploying to Heroku
+#### Heroku button
 
 You can use the Heroku deploy button on the [brobbot-slack-instance](https://github.com/b3nj4m/brobbot-slack-instance) project, or you can do it manually:
+
+#### Deploying to Heroku
 
 This is a modified set of instructions based on the [instructions on the Brobbot wiki](https://github.com/b3nj4m/hubot/blob/master/docs/deploying/heroku.md).
 
