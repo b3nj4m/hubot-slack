@@ -45,7 +45,7 @@
     "url": "https://github.com/b3nj4m/hubot-slack/issues"
   },
   "peerDependencies": {
-    "brobbot": "^4.0.4"
+    "brobbot": "4.x - 5.x"
   },
   "devDependencies": {
     "brobbot": "^4.0.4",

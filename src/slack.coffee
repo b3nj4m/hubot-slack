@@ -12,6 +12,8 @@ class SlackBot extends Adapter
 
   constructor: (robot) ->
     @robot = robot
+    @readyDefer = Q.defer()
+    @ready = @readyDefer.promise
 
   run: ->
     # Take our options from the environment, and set otherwise suitable defaults
@@ -67,7 +69,7 @@ class SlackBot extends Adapter
     @robot.logger.info 'Slack client now connected'
 
     # Tell Brobbot we're connected so it can load scripts
-    @emit "connected"
+    @readyDefer.resolve()
 
   clientClose: =>
     @robot.logger.info 'Slack client closed'
