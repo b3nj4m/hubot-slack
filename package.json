@@ -48,7 +48,7 @@
     "brobbot": "5.x - 6.x"
   },
   "devDependencies": {
-    "brobbot": "^4.0.4",
+    "brobbot": "^6.0.0",
     "coffee-script": "~1.7.1",
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
