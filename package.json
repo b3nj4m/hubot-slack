@@ -1,7 +1,10 @@
 {
   "name": "brobbot-slack",
   "version": "5.0.1",
-  "author": "Ben Robbins <ben.robbins@gmail.com>",
+  "author": {
+    "name": "Ben Robbins",
+    "email": "ben.robbins@gmail.com"
+  },
   "contributors": [
     {
       "name": "Myles Grant",
@@ -39,7 +42,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/b3nj4m/hubot-slack.git"
+    "url": "git+ssh://git@github.com/b3nj4m/hubot-slack.git"
   },
   "bugs": {
     "url": "https://github.com/b3nj4m/hubot-slack/issues"
@@ -62,10 +65,18 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "install": "./node_modules/.bin/coffee -c index.coffee src/*.coffee",
     "test": "mocha --compilers coffee:coffee-script/register --reporter spec"
   },
   "dependencies": {
     "q": "^1.2.0",
     "slack-client": "~1.2.0"
-  }
+  },
+  "readme": "# brobbot-slack\n\nThis is a [Brobbot](https://npmjs.org/package/brobbot) adapter to use with [Slack](https://slack.com).  \n\n## Getting Started\n\n#### Adding Slack adapter\n\nIn your [brobbot-instance](https://github.com/b3nj4m/brobbot-instance):\n\n```bash\nnpm install brobbot-slack --save\n```\n\nCheck out the [brobbot docs](https://github.com/b3nj4m/hubot/tree/master/docs/README.md) for further guidance on how to build your bot\n\n#### Testing your bot instance locally\n\n- `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`\n\n#### Heroku button\n\nYou can use the Heroku deploy button on the [brobbot-slack-instance](https://github.com/b3nj4m/brobbot-slack-instance) project, or you can do it manually:\n\n#### Deploying to Heroku\n\nThis is a modified set of instructions based on the [instructions on the Brobbot wiki](https://github.com/b3nj4m/hubot/blob/master/docs/deploying/heroku.md).\n\n- Make sure `brobbot-slack` is in your `package.json` dependencies in your [brobbot-instance](https://github.com/b3nj4m/brobbot-instance).\n- Edit your `Procfile` and change it to use the `slack` adapter:\n\n        web: ./index.sh -a slack\n\n- Install [heroku toolbelt](https://toolbelt.heroku.com/) if you haven't already.\n- `heroku create my-company-slackbot`\n- Activate the Hubot service on your [\"Team Services\"](http://my.slack.com/services/new/hubot) page inside Slack.\n- Add the [config variables](#configuration). For example:\n\n        % heroku config:add HEROKU_URL=http://soothing-mists-4567.herokuapp.com\n        % heroku config:add BROBBOT_SLACK_TOKEN=dqqQP9xlWXAq5ybyqKAU0axG\n\n- Deploy and start the bot:\n\n        % git push heroku master\n        % heroku ps:scale web=1\n\n- Profit!\n\n## Upgrading from earlier versions of Hubot\n\nVersion 4 of the brobbot-slack adapter requires different server support to\nprevious versions. If you have an existing \"hubot\" integration set up you'll\nneed to upgrade:\n\n- Go to https://my.slack.com/services/new/hubot and create a new hubot\n  integration\n- Run `npm install brobbot-slack@latest --save`\n  to update your code.\n- Test your bot instance locally using:\n  `BROBBOT_SLACK_TOKEN=xoxb-1234-5678-91011-00e4dd ./index.sh -a slack`\n- Update your production startup scripts to pass the new `BROBBOT_SLACK_TOKEN`.\n  You can remove the other `BROBBOT_SLACK_*` environment variables if you want.\n- Deploy your new brobbot to production.\n- Once you're happy it works, remove the old hubot integration from\n  https://my.slack.com/services\n\n## Configuration\n\nThis adapter uses the following environment variables:\n\n - `BROBBOT_SLACK_TOKEN` - This is the API token for the Slack user you would like to run Hubot under.\n\nTo add or remove your bot from specific channels or private groups, you can use the /kick and /invite slash commands that are built into Slack.\n\n## Copyright\n\nCopyright &copy; Slack Technologies, Inc. MIT License; see LICENSE for further details.\n",
+  "readmeFilename": "README.md",
+  "gitHead": "d66a90a227809160a7d21e9cfb60494b47ab792a",
+  "homepage": "https://github.com/b3nj4m/hubot-slack#readme",
+  "_id": "brobbot-slack@5.0.1",
+  "_shasum": "c544574359ee26c4a4245250ac62b7c8bf4d9153",
+  "_from": "brobbot-slack@*"
 }
