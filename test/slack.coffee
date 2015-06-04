@@ -1,4 +1,4 @@
-{SlackBot} = require '../index'
+SlackBot = require '../index'
 
 should = require 'should'
 

@@ -1,6 +1,6 @@
 # Setup stubs used by the other tests
 
-{SlackBot} = require '../index'
+SlackBot = require '../index'
 {EventEmitter} = require 'events'
 # Use brobbot's brain in our stubs
 {Brain} = require 'brobbot'
